@@ -8,6 +8,7 @@ class FaceCamDetector:
     self.display_image_op = display_enabled
     if not (self.camera_device.isOpened()):
       print("Error: Could not open your camera device.")
+      exit(1)
     self.classifier = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
 
   def _detect_face(self, frame):
@@ -42,6 +43,6 @@ class FaceCamDetector:
     cv2.destroyAllWindows()
 
 
-detector = FaceCamDetector(("127.0.0.1", 5001))
+detector = FaceCamDetector(("127.0.0.1", 5001), True)
 detector.update_frame_by_frame()
 detector.destroy()
