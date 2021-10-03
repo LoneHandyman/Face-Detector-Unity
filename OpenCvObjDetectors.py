@@ -39,9 +39,9 @@ class HandDetector():
     if self.results.multi_hand_landmarks:
         for hand_lms in self.results.multi_hand_landmarks:
             if self.display_image_op:
-                self.mp_draw.draw_landmarks(frame, hand_lms,
+                self.mp_draw.draw_landmarks(frame_rgb, hand_lms,
                                             self.mp_hands.HAND_CONNECTIONS)
-    return frame
+    return frame_rgb
 
   def find_hand_graph(self, frame, hand_idx=0):
     mod_frame = self._find_hands(frame)
