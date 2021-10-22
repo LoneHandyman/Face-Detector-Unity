@@ -8,6 +8,7 @@ import OpenCvObjDetectors as trackers
 sigmoid = lambda x: 1 / (1 + numpy.exp(-x))
 FLOAT_PRECISION = 4
 
+
 class ConnectionManager():
     def __init__(self, unity_server_ip, unity_server_port, draw_enabled=False):
         self.FACE_CLASSIFIER_NAME = "haarcascade_frontalface_alt.xml"
@@ -50,6 +51,7 @@ class ConnectionManager():
                 if len(landmarks) != 0:
                     x1, y1 = landmarks[4][1], landmarks[4][2]
                     x2, y2 = landmarks[8][1], landmarks[8][2]
+                    cv2.line(mod_hand_frame, (x1, y1), (x2, y2), (255, 0, 0), 3)
                     norm_acceleration_fact = round(min(math.hypot(x2 - x1, y2 - y1), 160.0) / 160.0, FLOAT_PRECISION)
                     # print("<Acceleration Factor>: %7.4f" % (norm_acceleration_fact))
                 # self.udp_connection.sendto(str(norm_movement_fact) + " " + str(norm_acceleration_fact), (self.unity_server_ip, self.unity_server_port))
@@ -58,12 +60,17 @@ class ConnectionManager():
                 postData = ','.join(map(str, self.data_face_acceleration))
                 self.tcp_connection.sendall(postData.encode("UTF-8"))
 
+                receivedData = self.tcp_connection.recv(1024).decode("UTF-8")
+                if receivedData == "close":
+                    break
+
                 if (self.draw_enabled):
                     cv2.imshow("Face", mod_face_frame)
                     cv2.imshow("Hand", mod_hand_frame)
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
+        self.tcp_connection.close()
 
 
 if __name__ == '__main__':
