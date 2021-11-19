@@ -1,3 +1,4 @@
 ConnectionManager
-__pycache__
-.idea
+__pycache__/
+.idea/
+**/.idea/
